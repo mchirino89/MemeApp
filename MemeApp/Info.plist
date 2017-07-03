@@ -41,5 +41,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>MemeApp needs access to your camera to take pictures and turning them into Memes!</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>MemeApp needs access to your library so you can choose which pictures you want to turn into Memes!</string>
 </dict>
 </plist>
