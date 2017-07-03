@@ -10,6 +10,8 @@ import UIKit
 
 class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    @IBOutlet weak var bottomTextField: UIImageView!
+    @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var deleteButton: UIBarButtonItem!
     @IBOutlet weak var photoButton: UIBarButtonItem!
