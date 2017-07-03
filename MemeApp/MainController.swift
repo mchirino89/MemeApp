@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainController.swift
 //  MemeApp
 //
 //  Created by Mauricio Chirino on 2/7/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +17,7 @@ class ViewController: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        print("Low memory in device")
     }
 
 
