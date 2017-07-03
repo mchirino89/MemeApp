@@ -62,14 +62,14 @@
                                 <fontDescription key="fontDescription" name=".SFNSDisplay" family=".SF NS Display" pointSize="35"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mvC-Wn-KKB">
-                                <rect key="frame" x="28" y="79" width="319" height="35"/>
+                            <textField opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mvC-Wn-KKB">
+                                <rect key="frame" x="28" y="74" width="319" height="47"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <attributedString key="attributedText">
                                     <fragment content="TOP">
                                         <attributes>
                                             <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <font key="NSFont" size="30" name=".SFNSDisplay"/>
+                                            <font key="NSFont" size="40" name=".SFNSDisplay"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -79,14 +79,14 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="gTQ-3k-2cv"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oTq-yj-mpl">
-                                <rect key="frame" x="28" y="568" width="319" height="35"/>
+                            <textField opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oTq-yj-mpl">
+                                <rect key="frame" x="28" y="566" width="319" height="47"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <attributedString key="attributedText">
                                     <fragment content="BOTTOM">
                                         <attributes>
                                             <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <font key="NSFont" size="30" name=".SFNSDisplay"/>
+                                            <font key="NSFont" size="40" name="Impact"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -104,13 +104,13 @@
                             <constraint firstItem="VAF-We-Wdk" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CUk-Gy-TA8"/>
                             <constraint firstItem="P2Q-G8-UD1" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="EL9-JW-GPr"/>
                             <constraint firstItem="P2Q-G8-UD1" firstAttribute="top" secondItem="In3-7J-KBA" secondAttribute="bottom" id="GwI-j1-yPe"/>
-                            <constraint firstItem="1hX-Dx-MXv" firstAttribute="top" secondItem="mvC-Wn-KKB" secondAttribute="bottom" constant="-50" id="H8c-MG-8s6"/>
+                            <constraint firstItem="1hX-Dx-MXv" firstAttribute="top" secondItem="mvC-Wn-KKB" secondAttribute="top" constant="-10" id="H8c-MG-8s6"/>
                             <constraint firstItem="oTq-yj-mpl" firstAttribute="centerX" secondItem="mvC-Wn-KKB" secondAttribute="centerX" id="NPe-S8-7pB"/>
                             <constraint firstItem="In3-7J-KBA" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="Pyy-W0-Xxa"/>
                             <constraint firstItem="VAF-We-Wdk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Rub-1O-9cv"/>
                             <constraint firstItem="1hX-Dx-MXv" firstAttribute="centerY" secondItem="In3-7J-KBA" secondAttribute="centerY" id="Ukn-9e-G8E"/>
                             <constraint firstItem="1hX-Dx-MXv" firstAttribute="centerX" secondItem="In3-7J-KBA" secondAttribute="centerX" id="VZL-ax-FD6"/>
-                            <constraint firstItem="P2Q-G8-UD1" firstAttribute="top" secondItem="oTq-yj-mpl" secondAttribute="bottom" constant="20" id="caf-h7-eAx"/>
+                            <constraint firstItem="P2Q-G8-UD1" firstAttribute="top" secondItem="oTq-yj-mpl" secondAttribute="bottom" constant="10" id="caf-h7-eAx"/>
                             <constraint firstItem="oTq-yj-mpl" firstAttribute="width" secondItem="mvC-Wn-KKB" secondAttribute="width" id="gJQ-Ow-Y4i"/>
                             <constraint firstItem="In3-7J-KBA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gkl-6S-bzg"/>
                             <constraint firstItem="In3-7J-KBA" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="kCu-1A-YGb"/>
@@ -134,7 +134,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="albumButton" destination="A2i-Qa-4dM" id="al2-uD-bXx"/>
-                        <outlet property="bottomTextField" destination="1hX-Dx-MXv" id="vV2-Ae-FfW"/>
+                        <outlet property="bottomTextField" destination="oTq-yj-mpl" id="NGE-ri-p4C"/>
                         <outlet property="deleteButton" destination="hTv-Zj-Dss" id="DRY-8l-pRZ"/>
                         <outlet property="memeImage" destination="1hX-Dx-MXv" id="WsV-yL-10Y"/>
                         <outlet property="photoButton" destination="Ejb-e8-HmP" id="urb-1j-qSN"/>

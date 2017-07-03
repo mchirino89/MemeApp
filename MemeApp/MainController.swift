@@ -10,7 +10,7 @@ import UIKit
 
 class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    @IBOutlet weak var bottomTextField: UIImageView!
+    @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var deleteButton: UIBarButtonItem!
@@ -25,6 +25,13 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         memeImage.autoresizingMask = UIViewAutoresizing.flexibleHeight
         photoPicker.delegate = self
         photoButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        let attributes = [NSStrokeWidthAttributeName: -4.0,
+                          NSStrokeColorAttributeName: UIColor.black,
+                          NSForegroundColorAttributeName: UIColor.white] as [String : Any];
+        topTextField.attributedText = NSAttributedString(string: "TOP", attributes: attributes)
+        topTextField.attributedPlaceholder = NSAttributedString(string: "Type clever joke", attributes: attributes)
+        bottomTextField.attributedText = NSAttributedString(string: "BOTTOM", attributes: attributes)
+        bottomTextField.attributedPlaceholder = NSAttributedString(string: "And punch line", attributes: attributes)
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,14 +45,18 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     private func enableActions(enable: Bool) {
-        shareButton.isEnabled = enable
-        deleteButton.isEnabled = enable
+        UIView.animate(withDuration: 0.35, animations: {
+            self.shareButton.isEnabled = enable
+            self.deleteButton.isEnabled = enable
+            self.placeholderTextView.alpha = enable ? 0 : 1
+            self.memeImage.alpha = enable ? 1 : 0
+            self.topTextField.alpha = enable ? 1 : 0
+            self.bottomTextField.alpha = enable ? 1 : 0
+        })
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            memeImage.alpha = 1
-            placeholderTextView.alpha = 0
             memeImage.image = image
             enableActions(enable: true)
         }
@@ -61,13 +72,7 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func deleteMemeAction(_ sender: Any) {
-        UIView.animate(withDuration: 0.35, animations: {
-            self.enableActions(enable: false)
-            self.memeImage.alpha = 0
-            self.placeholderTextView.alpha = 1
-        }, completion: { _ in
-            self.memeImage.image = nil
-        })
+        enableActions(enable: false)
     }
     
     @IBAction func takePhotoAction(_ sender: Any) {
@@ -76,5 +81,25 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func pickPhotoAction(_ sender: Any) {
         getImageFromSource(isCameraImage: false)
+    }
+}
+
+extension MainController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if (textField.isEqual(topTextField) && textField.text == "TOP") || (textField.isEqual(bottomTextField) && textField.text == "BOTTOM") {
+            textField.text = ""
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if (textField.isEqual(topTextField) && textField.text == "") {
+            textField.text = "TOP"
+        } else if textField.isEqual(bottomTextField) && textField.text == "" {
+            textField.text = "BOTTOM"
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return view.endEditing(true)
     }
 }
