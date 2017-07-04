@@ -144,6 +144,7 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func shareMemeAction(_ sender: Any) {
         let producedMeme = generateMemedImage()
         let resultingMeme = Meme(joke: topTextField.text!, punchLine: bottomTextField.text!, originalImage: memeImage.image!, generatedMeme: producedMeme)
+        (UIApplication.shared.delegate as! AppDelegate).memes.append(resultingMeme)
         DispatchQueue.main.async {
             UIImageWriteToSavedPhotosAlbum(resultingMeme.generatedMeme, nil, nil, nil)
         }
