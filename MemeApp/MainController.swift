@@ -8,13 +8,6 @@
 
 import UIKit
 
-struct Meme {
-    var joke: String
-    var punchLine: String
-    var originalImage: UIImage
-    var generatedMeme: UIImage
-}
-
 class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIToolbarDelegate {
 
     @IBOutlet weak var photoSourceHeightConstraint: NSLayoutConstraint!
@@ -34,13 +27,8 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         memeImage.autoresizingMask = UIViewAutoresizing.flexibleHeight
         photoPicker.delegate = self
         photoButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        let attributes = [NSStrokeWidthAttributeName: -4.0,
-                          NSStrokeColorAttributeName: UIColor.black,
-                          NSForegroundColorAttributeName: UIColor.white] as [String : Any];
-        topTextField.attributedText = NSAttributedString(string: "TOP", attributes: attributes)
-        topTextField.attributedPlaceholder = NSAttributedString(string: "Type clever joke", attributes: attributes)
-        bottomTextField.attributedText = NSAttributedString(string: "BOTTOM", attributes: attributes)
-        bottomTextField.attributedPlaceholder = NSAttributedString(string: "And punch line", attributes: attributes)
+        configureTextField(textField: topTextField, text: "top", placeholder: "Add clever joke")
+        configureTextField(textField: bottomTextField, text: "bottom", placeholder: "And punch line")
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
     }
@@ -68,6 +56,14 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
 //# Private helper methods
+    
+    func configureTextField(textField: UITextField, text: String, placeholder: String) {
+        let attributes = [NSStrokeWidthAttributeName: -4.0,
+                          NSStrokeColorAttributeName: UIColor.black,
+                          NSForegroundColorAttributeName: UIColor.white] as [String : Any];
+        textField.attributedText = NSAttributedString(string: text.uppercased(), attributes: attributes)
+        textField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: attributes)
+    }
     
     private func getImageFromSource(isCameraImage: Bool) {
         photoPicker.sourceType = isCameraImage ? .camera : .photoLibrary
