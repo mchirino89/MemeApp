@@ -138,6 +138,7 @@
                         <outlet property="deleteButton" destination="hTv-Zj-Dss" id="DRY-8l-pRZ"/>
                         <outlet property="memeImage" destination="1hX-Dx-MXv" id="WsV-yL-10Y"/>
                         <outlet property="photoButton" destination="Ejb-e8-HmP" id="urb-1j-qSN"/>
+                        <outlet property="photoSourceToolBar" destination="P2Q-G8-UD1" id="SsW-jM-zJC"/>
                         <outlet property="placeholderTextView" destination="VAF-We-Wdk" id="Xe3-rK-byO"/>
                         <outlet property="shareButton" destination="zrR-ub-Svv" id="601-fu-R07"/>
                         <outlet property="topTextField" destination="mvC-Wn-KKB" id="b5o-XN-llD"/>

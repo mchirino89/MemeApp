@@ -8,8 +8,16 @@
 
 import UIKit
 
-class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+struct Meme {
+    var joke: String
+    var punchLine: String
+    var originalImage: UIImage
+    var generatedMeme: UIImage
+}
 
+class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIToolbarDelegate {
+
+    @IBOutlet weak var photoSourceToolBar: UIToolbar!
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var shareButton: UIBarButtonItem!
@@ -32,6 +40,13 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         topTextField.attributedPlaceholder = NSAttributedString(string: "Type clever joke", attributes: attributes)
         bottomTextField.attributedText = NSAttributedString(string: "BOTTOM", attributes: attributes)
         bottomTextField.attributedPlaceholder = NSAttributedString(string: "And punch line", attributes: attributes)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,12 +54,22 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         print("Low memory in device")
     }
     
+//# Public helper for warning/erros alert
+    
+    func showAlert(alertMessage: String, alertTitle: String = "Ups!") {
+        let lowerCaseAlert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+        lowerCaseAlert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        present(lowerCaseAlert, animated: true, completion: nil)
+    }
+    
+//# Private helper methods
+    
     private func getImageFromSource(isCameraImage: Bool) {
         photoPicker.sourceType = isCameraImage ? .camera : .photoLibrary
         present(photoPicker, animated: true, completion: nil)
     }
     
-    private func enableActions(enable: Bool) {
+    private func enableActions(enable: Bool, removal: Bool = false) {
         UIView.animate(withDuration: 0.35, animations: {
             self.shareButton.isEnabled = enable
             self.deleteButton.isEnabled = enable
@@ -52,8 +77,51 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.memeImage.alpha = enable ? 1 : 0
             self.topTextField.alpha = enable ? 1 : 0
             self.bottomTextField.alpha = enable ? 1 : 0
+        }, completion: { _ in
+            if removal {
+                self.memeImage.image = nil
+            }
         })
     }
+    
+    private func setCanvasForCapture(barsHidden: Bool) {
+        navigationController?.setNavigationBarHidden(barsHidden, animated: false)
+        navigationController?.setToolbarHidden(barsHidden, animated: false)
+    }
+    
+    private func generateMemedImage() -> UIImage {
+        setCanvasForCapture(barsHidden: true)
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.drawHierarchy(in: view.frame, afterScreenUpdates: true)
+        let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        setCanvasForCapture(barsHidden: false)
+        return memedImage
+    }
+    
+//# Keyboard events and handling
+    
+    func keyboardWillShow(_ notification:Notification) {
+        if bottomTextField.isFirstResponder {
+            view.frame.origin.y -= getKeyboardHeight(notification)
+            navigationController?.toolbar.isHidden = true
+        }
+    }
+    
+    func keyboardWillHide(_ notification:Notification) {
+        if view.frame.origin.y < 0 {
+            view.frame.origin.y += getKeyboardHeight(notification)
+            navigationController?.toolbar.isHidden = false
+        }
+    }
+    
+    func getKeyboardHeight(_ notification:Notification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        return keyboardSize.cgRectValue.height
+    }
+    
+//# Picker delegates
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
@@ -66,13 +134,24 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
+    
+//# Button actions
 
     @IBAction func shareMemeAction(_ sender: Any) {
-        print("Sharing image")
+        let producedMeme = generateMemedImage()
+        let resultingMeme = Meme(joke: topTextField.text!, punchLine: bottomTextField.text!, originalImage: memeImage.image!, generatedMeme: producedMeme)
+        DispatchQueue.main.async {
+            UIImageWriteToSavedPhotosAlbum(resultingMeme.generatedMeme, nil, nil, nil)
+        }
+        let activityViewController = UIActivityViewController(activityItems: [resultingMeme.generatedMeme], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = view
+        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.addToReadingList, UIActivityType.openInIBooks ]
+        present(activityViewController, animated: true, completion: nil)
+        showAlert(alertMessage: "Your Meme has been saved in your camera roll", alertTitle: "Awesome!")
     }
     
     @IBAction func deleteMemeAction(_ sender: Any) {
-        enableActions(enable: false)
+        enableActions(enable: false, removal: true)
     }
     
     @IBAction func takePhotoAction(_ sender: Any) {
@@ -84,6 +163,7 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 }
 
+//# Textfield delegate methods
 extension MainController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if (textField.isEqual(topTextField) && textField.text == "TOP") || (textField.isEqual(bottomTextField) && textField.text == "BOTTOM") {
@@ -101,5 +181,16 @@ extension MainController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return view.endEditing(true)
+    }
+    
+//# Forcing only lowercase characters and no more than 30
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text else { return true }
+        if let _ = string.rangeOfCharacter(from: NSCharacterSet.lowercaseLetters) {
+            showAlert(alertMessage: "Only UPPER CASE letters for greater impact!")
+            return false
+        }
+        let newLength = text.characters.count + string.characters.count - range.length
+        return newLength <= 30
     }
 }
