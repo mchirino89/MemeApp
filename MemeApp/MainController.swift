@@ -17,7 +17,7 @@ struct Meme {
 
 class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIToolbarDelegate {
 
-    @IBOutlet weak var photoSourceToolBar: UIToolbar!
+    @IBOutlet weak var photoSourceHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var shareButton: UIBarButtonItem!
@@ -27,6 +27,7 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var memeImage: UIImageView!
     @IBOutlet weak var placeholderTextView: UITextView!
     let photoPicker = UIImagePickerController()
+    var statusBarHidden = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,12 +55,16 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         print("Low memory in device")
     }
     
-//# Public helper for warning/erros alert
+//# Public helpers
     
     func showAlert(alertMessage: String, alertTitle: String = "Ups!") {
         let lowerCaseAlert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
         lowerCaseAlert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
         present(lowerCaseAlert, animated: true, completion: nil)
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
     }
     
 //# Private helper methods
@@ -86,7 +91,10 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     private func setCanvasForCapture(barsHidden: Bool) {
         navigationController?.setNavigationBarHidden(barsHidden, animated: false)
-        navigationController?.setToolbarHidden(barsHidden, animated: false)
+        photoSourceHeightConstraint.constant = barsHidden ? 0 : 44
+        // Hiding status bar during capture to ensure full image clarity 
+        statusBarHidden = barsHidden
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     private func generateMemedImage() -> UIImage {
