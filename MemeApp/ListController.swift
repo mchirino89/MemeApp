@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class ListController: UITableViewController {
+class ListController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var emptyPlaceholderView: UIView!
     @IBOutlet var memeList: UITableView!
@@ -18,7 +18,7 @@ class ListController: UITableViewController {
     lazy var formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "UTC")
-        formatter.dateFormat = "MMM,dd YYYY hh:mm a"
+        formatter.dateFormat = "MMM/dd/YY hh:mm a"
         return formatter
     } ()
 
@@ -49,28 +49,27 @@ class ListController: UITableViewController {
                 }
             })
         }
+        emptyPlaceholderView.isHidden = !MemeSingleton.isEmpty
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        emptyPlaceholderView.isHidden = !MemeSingleton.isEmpty
-        if !MemeSingleton.isEmpty {
-            emptyPlaceholderView.removeFromSuperview()
-        }
-        memeList.reloadData()
+        
+//        if !MemeSingleton.isEmpty {
+//            emptyPlaceholderView.removeFromSuperview()
+//        }
+//        memeList.reloadData()
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return MemeSingleton.count
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MemeListThumbnailCell", for: indexPath) as! MemeListCell
         cell.thumbnailImage.image = MemeSingleton[indexPath.row].generatedMeme
         cell.contentLabel.text = "Meme \(indexPath.row + 1)"
         cell.dateLabel.text = formatter.string(from: MemeSingleton[indexPath.row].creationTime)
-        // Configure the cell...
-
         return cell
     }
 
