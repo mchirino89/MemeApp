@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIToolbarDelegate {
 
@@ -142,9 +143,40 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //# Button actions
 
     @IBAction func shareMemeAction(_ sender: Any) {
+        var assetCollection: PHAssetCollection!
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.fetchLimit = 1
+        fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme album")
+        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: fetchOptions)
+        
+        if let first_Obj:AnyObject = collection.firstObject{
+            assetCollection = first_Obj as! PHAssetCollection
+        }
+        
+        
+        
         let producedMeme = generateMemedImage()
-        let resultingMeme = Meme(joke: topTextField.text!, punchLine: bottomTextField.text!, originalImage: memeImage.image!, generatedMeme: producedMeme)
+        let resultingMeme = Meme(joke: topTextField.text!, punchLine: bottomTextField.text!, originalImage: memeImage.image!, generatedMeme: producedMeme, creationTime: Date())
         (UIApplication.shared.delegate as! AppDelegate).memes.append(resultingMeme)
+        
+        PHPhotoLibrary.shared().performChanges({
+            let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: producedMeme)
+            assetRequest.creationDate = Date()
+//            assetRequest.
+            let assetPlaceholder = assetRequest.placeholderForCreatedAsset
+            let albumChangeRequest = PHAssetCollectionChangeRequest(for: assetCollection)
+            albumChangeRequest!.addAssets(assetPlaceholder as! NSFastEnumeration)
+        }, completionHandler: { success, error in
+            
+            if error == nil {
+                print("added image to album")
+            } else {
+                print(error!)
+            }
+            
+//            self.showImages()
+        })
+        
         DispatchQueue.main.async {
             UIImageWriteToSavedPhotosAlbum(resultingMeme.generatedMeme, nil, nil, nil)
         }

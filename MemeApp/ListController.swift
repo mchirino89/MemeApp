@@ -11,9 +11,16 @@ import Photos
 
 class ListController: UITableViewController {
     
+    @IBOutlet weak var emptyPlaceholderView: UIView!
+    @IBOutlet var memeList: UITableView!
     var assetCollection: PHAssetCollection!
-    var photosAsset: PHFetchResult<AnyObject>!
-    var assetThumbnailSize: CGSize!
+    var MemeSingleton = (UIApplication.shared.delegate as! AppDelegate).memes
+    lazy var formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        formatter.dateFormat = "MMM,dd YYYY hh:mm a"
+        return formatter
+    } ()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,31 +28,51 @@ class ListController: UITableViewController {
         let fetchOptions = PHFetchOptions()
         fetchOptions.fetchLimit = 1
         fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme album")
-        
         let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: fetchOptions)
         
         if let first_Obj:AnyObject = collection.firstObject{
-
             assetCollection = first_Obj as! PHAssetCollection
-            print(assetCollection.estimatedAssetCount)
+            let assets : PHFetchResult = PHAsset.fetchAssets(in: assetCollection, options: nil)
+            let imageManager = PHCachingImageManager()
+            assets.enumerateObjects({(object: AnyObject!, count: Int,
+                stop: UnsafeMutablePointer<ObjCBool>) in
+                if object is PHAsset {
+                    let asset = object as! PHAsset
+                    let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .fastFormat
+                    options.isSynchronous = true
+                    imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
+                        (image: UIImage?, info: [AnyHashable : Any]?) in
+                        self.MemeSingleton.append(Meme(joke: "", punchLine: "", originalImage: image!, generatedMeme: image!, creationTime: asset.creationDate!))
+                    })
+                }
+            })
         }
-
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        emptyPlaceholderView.isHidden = !MemeSingleton.isEmpty
+        if !MemeSingleton.isEmpty {
+            emptyPlaceholderView.removeFromSuperview()
+        }
+        memeList.reloadData()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return MemeSingleton.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MemeListThumbnailCell", for: indexPath) as! MemeListCell
+        cell.thumbnailImage.image = MemeSingleton[indexPath.row].generatedMeme
+        cell.contentLabel.text = "Meme \(indexPath.row + 1)"
+        cell.dateLabel.text = formatter.string(from: MemeSingleton[indexPath.row].creationTime)
         // Configure the cell...
 
         return cell
     }
-    */
 
 
     /*

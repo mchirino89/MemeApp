@@ -19,6 +19,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <view key="tableFooterView" hidden="YES" contentMode="scaleToFill" id="S0E-ct-DdF">
+                            <rect key="frame" x="0.0" y="178" width="375" height="254"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No memes to show yet, make some now! 📷😃" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JsJ-fG-vDq">
+                                    <rect key="frame" x="26" y="91" width="322" height="72"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="322" id="Yfo-J4-kaf"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="JsJ-fG-vDq" firstAttribute="centerX" secondItem="S0E-ct-DdF" secondAttribute="centerX" id="FOg-Dx-A4g"/>
+                                <constraint firstItem="JsJ-fG-vDq" firstAttribute="centerY" secondItem="S0E-ct-DdF" secondAttribute="centerY" id="bj7-V5-b2W"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MemeListThumbnailCell" rowHeight="150" id="Gp6-vB-rGX" customClass="MemeListCell" customModule="MemeApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="150"/>
@@ -27,7 +47,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="149"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2hj-bB-wKd">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2hj-bB-wKd">
                                             <rect key="frame" x="16" y="11" width="80" height="128"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="80" id="6N9-sD-sy7"/>
@@ -69,16 +89,20 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="GRW-qV-ocI"/>
+                    <connections>
+                        <outlet property="emptyPlaceholderView" destination="S0E-ct-DdF" id="ouL-pX-ef1"/>
+                        <outlet property="memeList" destination="BIC-Wb-uuH" id="8or-fI-XJ8"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aD8-bD-VD1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="549.60000000000002" y="-943.17841079460277"/>
         </scene>
-        <!--Item-->
+        <!--Navigation Controller-->
         <scene sceneID="nCQ-rm-bfy">
             <objects>
                 <navigationController id="Y5o-yz-5qe" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="J7p-bF-QeO"/>
+                    <tabBarItem key="tabBarItem" title="" image="List" id="J7p-bF-QeO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Heb-Zo-Opn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -126,11 +150,11 @@
             </objects>
             <point key="canvasLocation" x="550" y="-29"/>
         </scene>
-        <!--Item-->
+        <!--Navigation Controller-->
         <scene sceneID="LdQ-RS-z8n">
             <objects>
                 <navigationController id="604-Yl-tuZ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="OZP-qo-5pg"/>
+                    <tabBarItem key="tabBarItem" title="" image="Grid" id="OZP-qo-5pg"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="INP-io-R6R">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -302,4 +326,8 @@
             <point key="canvasLocation" x="-1807" y="-430"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Grid" width="30" height="30"/>
+        <image name="List" width="30" height="30"/>
+    </resources>
 </document>
