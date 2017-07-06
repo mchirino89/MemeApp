@@ -7,15 +7,22 @@
 //
 
 import UIKit
+import Photos
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var memes = [Meme]()
+    var assetCollection: PHAssetCollection!
+    lazy var formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        formatter.dateFormat = "MMM/dd/YY hh:mm a"
+        return formatter
+    }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         return true
     }
 
@@ -41,6 +48,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func refreshPhotoCarret() {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.fetchLimit = 1
+        fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme Album")
+        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: fetchOptions)
+        if let first_Obj:AnyObject = collection.firstObject{
+            assetCollection = first_Obj as! PHAssetCollection
+            let assets : PHFetchResult = PHAsset.fetchAssets(in: assetCollection, options: nil)
+            let imageManager = PHCachingImageManager()
+            memes.removeAll()
+            assets.enumerateObjects({ [weak self] (object: AnyObject!, count: Int,
+                stop: UnsafeMutablePointer<ObjCBool>) in
+                if object is PHAsset {
+                    let asset = object as! PHAsset
+                    let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .fastFormat
+                    options.isSynchronous = true
+                    imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
+                        (image: UIImage?, info: [AnyHashable : Any]?) in
+                        self?.memes.append(Meme(joke: "", punchLine: "", originalImage: image!, generatedMeme: image!, creationTime: asset.creationDate!))
+                    })
+                }
+            })
+        }
+    }
+    
+    func getReadableDate(dateToConvert: Date?) -> String {
+        return dateToConvert != nil ? formatter.string(from: dateToConvert!) : "Unknown"
+    }
 }
 

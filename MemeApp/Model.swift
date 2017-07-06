@@ -14,5 +14,4 @@ struct Meme {
     var originalImage: UIImage
     var generatedMeme: UIImage
     var creationTime: Date
-    
 }
