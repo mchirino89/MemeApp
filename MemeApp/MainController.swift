@@ -184,7 +184,7 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         activityViewController.popoverPresentationController?.sourceView = view
         activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.addToReadingList, UIActivityType.openInIBooks ]
         present(activityViewController, animated: true, completion: nil)
-        showAlert(alertMessage: "Your Meme has been saved in your camera roll", alertTitle: "Awesome!")
+//        showAlert(alertMessage: "Your Meme has been saved in your camera roll", alertTitle: "Awesome!")
     }
     
     @IBAction func deleteMemeAction(_ sender: Any) {

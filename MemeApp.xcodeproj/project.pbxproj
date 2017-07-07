@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		225414161F0ECA3A004B76F3 /* MemeGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225414151F0ECA3A004B76F3 /* MemeGridCell.swift */; };
+		225414181F0EF2EF004B76F3 /* FullViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225414171F0EF2EF004B76F3 /* FullViewController.swift */; };
 		227B109A1F09CD4500FE8151 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B10991F09CD4500FE8151 /* AppDelegate.swift */; };
 		227B109C1F09CD4500FE8151 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227B109B1F09CD4500FE8151 /* MainController.swift */; };
 		227B109F1F09CD4500FE8151 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 227B109D1F09CD4500FE8151 /* Main.storyboard */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		225414151F0ECA3A004B76F3 /* MemeGridCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemeGridCell.swift; sourceTree = "<group>"; };
+		225414171F0EF2EF004B76F3 /* FullViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullViewController.swift; sourceTree = "<group>"; };
 		227B10961F09CD4500FE8151 /* MemeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		227B10991F09CD4500FE8151 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		227B109B1F09CD4500FE8151 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				22CEC6D71F0EC808005EC0B5 /* GridController.swift */,
 				22CEC6D21F0D52B1005EC0B5 /* ListController.swift */,
 				227B109B1F09CD4500FE8151 /* MainController.swift */,
+				225414171F0EF2EF004B76F3 /* FullViewController.swift */,
 			);
 			path = MemeApp;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				225414161F0ECA3A004B76F3 /* MemeGridCell.swift in Sources */,
 				22CEC6CF1F0BFC9A005EC0B5 /* Model.swift in Sources */,
 				227B109C1F09CD4500FE8151 /* MainController.swift in Sources */,
+				225414181F0EF2EF004B76F3 /* FullViewController.swift in Sources */,
 				227B109A1F09CD4500FE8151 /* AppDelegate.swift in Sources */,
 				22CEC6D31F0D52B1005EC0B5 /* ListController.swift in Sources */,
 			);

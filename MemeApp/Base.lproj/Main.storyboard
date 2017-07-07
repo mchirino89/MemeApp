@@ -119,11 +119,12 @@
                         <outlet property="emptyPlaceholderView" destination="qf6-HV-R5q" id="yD8-VG-WDk"/>
                         <outlet property="loadingIndicator" destination="5Af-FG-Css" id="8sn-HF-eZh"/>
                         <outlet property="memeList" destination="v11-aR-gCQ" id="BmK-eS-twh"/>
+                        <segue destination="p0F-6z-DBd" kind="show" identifier="showMemeFromList" id="WGh-F0-Oly"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vsb-Mz-Urn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="644" y="-943"/>
+            <point key="canvasLocation" x="556" y="-1361"/>
         </scene>
         <!--List view-->
         <scene sceneID="nCQ-rm-bfy">
@@ -140,7 +141,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="isQ-L0-fHc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-402" y="-29"/>
+            <point key="canvasLocation" x="-489" y="33"/>
         </scene>
         <!--Grid Controller-->
         <scene sceneID="z8y-1V-3Pi">
@@ -199,7 +200,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="f63-II-kvC">
-                                                    <rect key="frame" x="0.0" y="159" width="120" height="18"/>
+                                                    <rect key="frame" x="6" y="159" width="108" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -208,7 +209,7 @@
                                         </view>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="f63-II-kvC" secondAttribute="bottom" id="5c4-3l-OtR"/>
-                                            <constraint firstItem="f63-II-kvC" firstAttribute="width" secondItem="Nm6-DI-3BW" secondAttribute="width" id="Dqh-9c-XXU"/>
+                                            <constraint firstItem="f63-II-kvC" firstAttribute="width" secondItem="Nm6-DI-3BW" secondAttribute="width" multiplier="0.9" id="Dqh-9c-XXU"/>
                                             <constraint firstItem="jNP-vR-B3a" firstAttribute="centerX" secondItem="Nm6-DI-3BW" secondAttribute="centerX" id="JZ8-ej-Lx6"/>
                                             <constraint firstItem="f63-II-kvC" firstAttribute="centerX" secondItem="Nm6-DI-3BW" secondAttribute="centerX" id="Rba-a1-kMS"/>
                                             <constraint firstItem="jNP-vR-B3a" firstAttribute="top" secondItem="Nm6-DI-3BW" secondAttribute="topMargin" constant="8" id="pze-IS-DmB"/>
@@ -247,11 +248,12 @@
                         <outlet property="emptyPlaceholderView" destination="y0h-Hm-wDC" id="lF7-C3-Qb6"/>
                         <outlet property="loadingIndicator" destination="70S-9u-dsz" id="y6c-7O-mWJ"/>
                         <outlet property="memeGrid" destination="Mdc-lo-2wS" id="EQL-nF-bpT"/>
+                        <segue destination="p0F-6z-DBd" kind="show" identifier="showMemeFromGrid" id="FSX-Q0-oH5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="93s-Ux-Qmg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="661.60000000000002" y="-29.23538230884558"/>
+            <point key="canvasLocation" x="575" y="32"/>
         </scene>
         <!--Grid view-->
         <scene sceneID="LdQ-RS-z8n">
@@ -268,12 +270,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="flm-qS-jKk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-402" y="-943"/>
+            <point key="canvasLocation" x="-492" y="-1361"/>
         </scene>
         <!--Item-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MainController" customModule="MemeApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="createMemeView" id="BYZ-38-t0r" customClass="MainController" customModule="MemeApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -301,6 +303,8 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="aOa-9l-Qfg"/>
+                                    <barButtonItem title="Item" id="PhN-Rg-NKs"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="1On-8i-Okh"/>
                                 </items>
                                 <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </toolbar>
@@ -408,7 +412,40 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2294" y="-807"/>
+            <point key="canvasLocation" x="44" y="-666"/>
+        </scene>
+        <!--Full View Controller-->
+        <scene sceneID="4fr-hr-3Rq">
+            <objects>
+                <viewController id="p0F-6z-DBd" customClass="FullViewController" customModule="MemeApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bHi-Vh-nO7"/>
+                        <viewControllerLayoutGuide type="bottom" id="l4T-ev-ukd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Fd9-lK-NMk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="71a-IJ-8Pf">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="l4T-ev-ukd" firstAttribute="top" secondItem="71a-IJ-8Pf" secondAttribute="bottom" id="Iov-W9-YP8"/>
+                            <constraint firstItem="71a-IJ-8Pf" firstAttribute="leading" secondItem="Fd9-lK-NMk" secondAttribute="leading" id="Vpf-Wd-bbb"/>
+                            <constraint firstItem="71a-IJ-8Pf" firstAttribute="top" secondItem="bHi-Vh-nO7" secondAttribute="bottom" id="eRt-BD-1cv"/>
+                            <constraint firstAttribute="trailing" secondItem="71a-IJ-8Pf" secondAttribute="trailing" id="y1v-M1-1vs"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="largeImage" destination="71a-IJ-8Pf" id="qps-Mi-aDe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gdV-lk-aJI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1969" y="-876"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="0dv-CO-6C6">
@@ -433,4 +470,7 @@
         <image name="Grid" width="30" height="30"/>
         <image name="List" width="30" height="30"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="WGh-F0-Oly"/>
+    </inferredMetricsTieBreakers>
 </document>

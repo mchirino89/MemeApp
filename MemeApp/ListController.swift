@@ -18,7 +18,7 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Meme list"
-        reloadView()
+        reloadView(hardReload: true)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -34,9 +34,16 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell
     }
     
-    private func reloadView() {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "showMemeFromList", sender: singleton.memes[indexPath.row].generatedMeme)
+        tableView.cellForRow(at: indexPath)?.isSelected = false
+    }
+    
+    private func reloadView(hardReload: Bool = false) {
         loadingIndicator.startAnimating()
-        singleton.refreshPhotoCarret()
+        if hardReload {
+            singleton.refreshPhotoCarret()
+        }
         emptyPlaceholderView.isHidden = !singleton.memes.isEmpty
         memeList.isHidden = singleton.memes.isEmpty
         memeList.reloadData()
@@ -44,15 +51,8 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
         loadingIndicator.stopAnimating()
     }
 
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        (segue.destination as! FullViewController).memeImage = sender as? UIImage
     }
-    */
 
 }
