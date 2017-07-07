@@ -21,16 +21,17 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
         reloadView(hardReload: true)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        reloadView()
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return singleton.memes.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MemeListThumbnailCell", for: indexPath) as! MemeListCell
-        let meme = singleton.memes[indexPath.row]
-        cell.thumbnailImage.image = meme.generatedMeme
-        cell.contentLabel.text = "Meme \(indexPath.row + 1)"
-        cell.dateLabel.text = singleton.getReadableDate(dateToConvert: meme.creationTime)
+        cell.setupCellWith(meme: singleton.memes[indexPath.row], row: indexPath.row)
         return cell
     }
     
@@ -47,7 +48,6 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
         emptyPlaceholderView.isHidden = !singleton.memes.isEmpty
         memeList.isHidden = singleton.memes.isEmpty
         memeList.reloadData()
-        memeList.reloadSections(IndexSet(integer: 0), with: .top)
         loadingIndicator.stopAnimating()
     }
 
@@ -57,7 +57,6 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
 
     @IBAction func addMemeAction(_ sender: Any) {
         let addition = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "createMemeView") as! MainController
-        addition.listControllerReference = self
         let navController = UINavigationController(rootViewController: addition)
         present(navController, animated:true, completion: nil)
     }

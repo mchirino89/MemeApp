@@ -14,9 +14,14 @@ class GridController: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var memeGrid: UICollectionView!
     var singleton = (UIApplication.shared.delegate as! AppDelegate)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Meme grid"
+        reloadView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         reloadView()
     }
 
@@ -32,9 +37,7 @@ class GridController: UIViewController, UICollectionViewDelegate, UICollectionVi
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GridCell", for: indexPath) as! MemeGridCell
-        let meme = singleton.memes[indexPath.row]
-        cell.ThumbnailImage.image = meme.generatedMeme
-        cell.dateLabel.text = singleton.getReadableDate(dateToConvert: meme.creationTime)
+        cell.setupCellWith(meme: singleton.memes[indexPath.row])
         return cell
     }
     
@@ -60,7 +63,6 @@ class GridController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     @IBAction func addMemeAction(_ sender: Any) {
         let addition = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "createMemeView") as! MainController
-        addition.gridControllerReference = self
         let navController = UINavigationController(rootViewController: addition)
         present(navController, animated:true, completion: nil)
     }

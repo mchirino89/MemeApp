@@ -9,7 +9,8 @@
 import UIKit
 import Photos
 
-class MainController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIToolbarDelegate {
+// Moved out to extensions, i don't know why the compiler complained before.
+class MainController: UIViewController {
 
     @IBOutlet weak var photoSourceHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var bottomTextField: UITextField!
@@ -22,8 +23,6 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var placeholderTextView: UITextView!
     let photoPicker = UIImagePickerController()
     var statusBarHidden = false
-    weak var listControllerReference:ListController? = nil
-    weak var gridControllerReference:GridController? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,21 +70,6 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private func getImageFromSource(isCameraImage: Bool) {
         photoPicker.sourceType = isCameraImage ? .camera : .photoLibrary
         present(photoPicker, animated: true, completion: nil)
-    }
-    
-    private func enableActions(enable: Bool, removal: Bool = false) {
-        UIView.animate(withDuration: 0.35, animations: {
-            self.shareButton.isEnabled = enable
-            self.deleteButton.isEnabled = enable
-            self.placeholderTextView.alpha = enable ? 0 : 1
-            self.memeImage.alpha = enable ? 1 : 0
-            self.topTextField.alpha = enable ? 1 : 0
-            self.bottomTextField.alpha = enable ? 1 : 0
-        }, completion: { _ in
-            if removal {
-                self.memeImage.image = nil
-            }
-        })
     }
     
     private func setCanvasForCapture(barsHidden: Bool) {
@@ -145,10 +129,23 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let enumeration: NSArray = [assetPlaceholder!]
             albumChangeRequest!.addAssets(enumeration)
         }, completionHandler: { success, error in
-            if error == nil {
-                print("added image to album")
-            } else {
-                print(error!)
+            print(error == nil ? "added image to album" : error!)
+        })
+    }
+    
+//# Public helpers methods
+    
+    func enableActions(enable: Bool, removal: Bool = false) {
+        UIView.animate(withDuration: 0.35, animations: {
+            self.shareButton.isEnabled = enable
+            self.deleteButton.isEnabled = enable
+            self.placeholderTextView.alpha = enable ? 0 : 1
+            self.memeImage.alpha = enable ? 1 : 0
+            self.topTextField.alpha = enable ? 1 : 0
+            self.bottomTextField.alpha = enable ? 1 : 0
+        }, completion: { _ in
+            if removal {
+                self.memeImage.image = nil
             }
         })
     }
@@ -175,33 +172,23 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return keyboardSize.cgRectValue.height
     }
     
-//# Picker delegates
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            memeImage.image = image
-            enableActions(enable: true)
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-    
 //# Button actions
 
     @IBAction func shareMemeAction(_ sender: Any) {
         let producedMeme = generateMemedImage()
         let resultingMeme = Meme(joke: topTextField.text!, punchLine: bottomTextField.text!, originalImage: memeImage.image!, generatedMeme: producedMeme, creationTime: Date())
-        (UIApplication.shared.delegate as! AppDelegate).memes.append(resultingMeme)
-        listControllerReference != nil ? listControllerReference!.reloadView() : gridControllerReference?.reloadView()
         if let environment = setStorageEnvironment() {
-            saveInAlbum(memeAlbum: environment, producedMeme: generateMemedImage())
             let activityViewController = UIActivityViewController(activityItems: [resultingMeme.generatedMeme], applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = view
             activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.addToReadingList, UIActivityType.openInIBooks ]
             present(activityViewController, animated: true, completion: nil)
+            activityViewController.completionWithItemsHandler = { [weak self]
+                (activityType, completed, returnedItems, error) in
+                if completed {
+                    (UIApplication.shared.delegate as! AppDelegate).memes.append(resultingMeme)
+                    self?.saveInAlbum(memeAlbum: environment, producedMeme: (self?.generateMemedImage())!)
+                }
+            }
         } else {
             showAlert(alertMessage: "There was an error saving your picture")
         }
@@ -253,5 +240,21 @@ extension MainController: UITextFieldDelegate {
         }
         let newLength = text.characters.count + string.characters.count - range.length
         return newLength <= 30
+    }
+}
+
+extension MainController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    //# Picker delegates
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            memeImage.image = image
+            enableActions(enable: true)
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
 }
