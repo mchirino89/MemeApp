@@ -39,7 +39,7 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.cellForRow(at: indexPath)?.isSelected = false
     }
     
-    private func reloadView(hardReload: Bool = false) {
+    func reloadView(hardReload: Bool = false) {
         loadingIndicator.startAnimating()
         if hardReload {
             singleton.refreshPhotoCarret()
@@ -57,6 +57,7 @@ class ListController: UIViewController, UITableViewDataSource, UITableViewDelega
 
     @IBAction func addMemeAction(_ sender: Any) {
         let addition = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "createMemeView") as! MainController
+        addition.listControllerReference = self
         let navController = UINavigationController(rootViewController: addition)
         present(navController, animated:true, completion: nil)
     }

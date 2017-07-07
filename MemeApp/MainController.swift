@@ -22,6 +22,8 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var placeholderTextView: UITextView!
     let photoPicker = UIImagePickerController()
     var statusBarHidden = false
+    weak var listControllerReference:ListController? = nil
+    weak var gridControllerReference:GridController? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,6 +106,53 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return memedImage
     }
     
+    private func getMemeAlbum(albumName: String) -> PHAssetCollection? {
+        let fetchOptions = PHFetchOptions() // Search parameters
+        fetchOptions.fetchLimit = 1
+        fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme Album") // Album name
+        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: fetchOptions)
+        return collection.firstObject
+    }
+    
+    private func setStorageEnvironment() -> PHAssetCollection! {
+        let albumName = (UIApplication.shared.delegate as! AppDelegate).memeAlbumName
+        var generatedCollection = getMemeAlbum(albumName: albumName) // Photos app "pointer"
+        // If already created, obtain reference
+        if generatedCollection != nil {
+            return generatedCollection
+        }
+        // Otherwise, let's create the album
+        do {
+            try PHPhotoLibrary.shared().performChangesAndWait {
+                PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
+            }
+            // Once created, obtain that reference
+            generatedCollection = getMemeAlbum(albumName: albumName)
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+        // Return found/generated meme album
+        return generatedCollection
+    }
+    
+    private func saveInAlbum(memeAlbum: PHAssetCollection, producedMeme: UIImage) {
+        PHPhotoLibrary.shared().performChanges({
+            let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: producedMeme)
+            assetRequest.creationDate = Date()
+            let assetPlaceholder = assetRequest.placeholderForCreatedAsset
+            let albumChangeRequest = PHAssetCollectionChangeRequest(for: memeAlbum)
+            let enumeration: NSArray = [assetPlaceholder!]
+            albumChangeRequest!.addAssets(enumeration)
+        }, completionHandler: { success, error in
+            if error == nil {
+                print("added image to album")
+            } else {
+                print(error!)
+            }
+        })
+    }
+    
 //# Keyboard events and handling
     
     func keyboardWillShow(_ notification:Notification) {
@@ -143,62 +192,19 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //# Button actions
 
     @IBAction func shareMemeAction(_ sender: Any) {
-        var assetCollection: PHAssetCollection!
-        let fetchOptions = PHFetchOptions()
-        var assetCollectionPlaceholder: PHObjectPlaceholder!
-        fetchOptions.fetchLimit = 1
-        fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme Album")
-        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: fetchOptions)
-        
-//        if let first_Obj:AnyObject = collection.firstObject{
-//            assetCollection = first_Obj as! PHAssetCollection
-//        }  else {
-//            PHPhotoLibrary.shared().performChanges({
-//                let createAlbumRequest : PHAssetCollectionChangeRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: "Meme Album")
-//                self.assetCollectionPlaceholder = createAlbumRequest.placeholderForCreatedAssetCollection
-//            }, completionHandler: { success, error in
-//                self.albumFound = success
-//                
-//                if (success) {
-//                    let collectionFetchResult = PHAssetCollection.fetchAssetCollectionsWithLocalIdentifiers([self.assetCollectionPlaceholder.localIdentifier], options: nil)
-//                    print(collectionFetchResult)
-//                    self.assetCollection = collectionFetchResult.firstObject as! PHAssetCollection
-//                }
-//            })
-//        }
-        
-        
-        
         let producedMeme = generateMemedImage()
         let resultingMeme = Meme(joke: topTextField.text!, punchLine: bottomTextField.text!, originalImage: memeImage.image!, generatedMeme: producedMeme, creationTime: Date())
         (UIApplication.shared.delegate as! AppDelegate).memes.append(resultingMeme)
-        
-        PHPhotoLibrary.shared().performChanges({
-            let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: producedMeme)
-            assetRequest.creationDate = Date()
-//            assetRequest.
-            let assetPlaceholder = assetRequest.placeholderForCreatedAsset
-            let albumChangeRequest = PHAssetCollectionChangeRequest(for: assetCollection)
-            albumChangeRequest!.addAssets(assetPlaceholder as! NSFastEnumeration)
-        }, completionHandler: { success, error in
-            
-            if error == nil {
-                print("added image to album")
-            } else {
-                print(error!)
-            }
-            
-//            self.showImages()
-        })
-        
-        DispatchQueue.main.async {
-            UIImageWriteToSavedPhotosAlbum(resultingMeme.generatedMeme, nil, nil, nil)
+        listControllerReference != nil ? listControllerReference!.reloadView() : gridControllerReference?.reloadView()
+        if let environment = setStorageEnvironment() {
+            saveInAlbum(memeAlbum: environment, producedMeme: generateMemedImage())
+            let activityViewController = UIActivityViewController(activityItems: [resultingMeme.generatedMeme], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = view
+            activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.addToReadingList, UIActivityType.openInIBooks ]
+            present(activityViewController, animated: true, completion: nil)
+        } else {
+            showAlert(alertMessage: "There was an error saving your picture")
         }
-        let activityViewController = UIActivityViewController(activityItems: [resultingMeme.generatedMeme], applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = view
-        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.addToReadingList, UIActivityType.openInIBooks ]
-        present(activityViewController, animated: true, completion: nil)
-//        showAlert(alertMessage: "Your Meme has been saved in your camera roll", alertTitle: "Awesome!")
     }
     
     @IBAction func deleteMemeAction(_ sender: Any) {

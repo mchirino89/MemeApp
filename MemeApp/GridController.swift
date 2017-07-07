@@ -47,7 +47,7 @@ class GridController: UIViewController, UICollectionViewDelegate, UICollectionVi
         (segue.destination as! FullViewController).memeImage = sender as? UIImage
     }
     
-    private func reloadView(hardReload: Bool = false) {
+    func reloadView(hardReload: Bool = false) {
         loadingIndicator.startAnimating()
         if hardReload {
             singleton.refreshPhotoCarret()
@@ -60,6 +60,7 @@ class GridController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     @IBAction func addMemeAction(_ sender: Any) {
         let addition = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "createMemeView") as! MainController
+        addition.gridControllerReference = self
         let navController = UINavigationController(rootViewController: addition)
         present(navController, animated:true, completion: nil)
     }

@@ -12,6 +12,8 @@ import Photos
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    let memeAlbumName = "Meme Album"
+    
     var window: UIWindow?
     var memes = [Meme]()
     var assetCollection: PHAssetCollection!
@@ -51,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func refreshPhotoCarret() {
         let fetchOptions = PHFetchOptions()
         fetchOptions.fetchLimit = 1
-        fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme Album")
+        fetchOptions.predicate = NSPredicate(format: "title = %@", memeAlbumName)
         let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: fetchOptions)
         if let first_Obj:AnyObject = collection.firstObject{
             assetCollection = first_Obj as! PHAssetCollection
