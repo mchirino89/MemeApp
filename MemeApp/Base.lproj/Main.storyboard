@@ -114,7 +114,13 @@
                             <constraint firstItem="5Af-FG-Css" firstAttribute="centerX" secondItem="A0g-7h-cRG" secondAttribute="centerX" id="wnz-kH-sKH"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="nTG-PP-fXF"/>
+                    <navigationItem key="navigationItem" id="nTG-PP-fXF">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Hs5-tO-3x6">
+                            <connections>
+                                <action selector="addMemeAction:" destination="sgc-hP-EEa" id="zgK-a9-u9e"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="emptyPlaceholderView" destination="qf6-HV-R5q" id="yD8-VG-WDk"/>
                         <outlet property="loadingIndicator" destination="5Af-FG-Css" id="8sn-HF-eZh"/>
@@ -243,7 +249,13 @@
                             <constraint firstAttribute="trailing" secondItem="Mdc-lo-2wS" secondAttribute="trailing" id="m3G-5z-jM7"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="9ta-F8-ceU"/>
+                    <navigationItem key="navigationItem" id="9ta-F8-ceU">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="S9o-0a-FHR">
+                            <connections>
+                                <action selector="addMemeAction:" destination="QO2-gD-xVU" id="d5o-Tl-nfd"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="emptyPlaceholderView" destination="y0h-Hm-wDC" id="lF7-C3-Qb6"/>
                         <outlet property="loadingIndicator" destination="70S-9u-dsz" id="y6c-7O-mWJ"/>
@@ -303,7 +315,11 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="aOa-9l-Qfg"/>
-                                    <barButtonItem title="Item" id="PhN-Rg-NKs"/>
+                                    <barButtonItem title="Return" id="PhN-Rg-NKs">
+                                        <connections>
+                                            <action selector="returnAction:" destination="BYZ-38-t0r" id="AqU-mK-jz9"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="1On-8i-Okh"/>
                                 </items>
                                 <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -471,6 +487,6 @@
         <image name="List" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="WGh-F0-Oly"/>
+        <segue reference="FSX-Q0-oH5"/>
     </inferredMetricsTieBreakers>
 </document>

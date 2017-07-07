@@ -57,5 +57,10 @@ class GridController: UIViewController, UICollectionViewDelegate, UICollectionVi
         memeGrid.reloadData()
         loadingIndicator.stopAnimating()
     }
-
+    
+    @IBAction func addMemeAction(_ sender: Any) {
+        let addition = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "createMemeView") as! MainController
+        let navController = UINavigationController(rootViewController: addition)
+        present(navController, animated:true, completion: nil)
+    }
 }

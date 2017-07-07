@@ -145,13 +145,27 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func shareMemeAction(_ sender: Any) {
         var assetCollection: PHAssetCollection!
         let fetchOptions = PHFetchOptions()
+        var assetCollectionPlaceholder: PHObjectPlaceholder!
         fetchOptions.fetchLimit = 1
-        fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme album")
+        fetchOptions.predicate = NSPredicate(format: "title = %@", "Meme Album")
         let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: fetchOptions)
         
-        if let first_Obj:AnyObject = collection.firstObject{
-            assetCollection = first_Obj as! PHAssetCollection
-        }
+//        if let first_Obj:AnyObject = collection.firstObject{
+//            assetCollection = first_Obj as! PHAssetCollection
+//        }  else {
+//            PHPhotoLibrary.shared().performChanges({
+//                let createAlbumRequest : PHAssetCollectionChangeRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: "Meme Album")
+//                self.assetCollectionPlaceholder = createAlbumRequest.placeholderForCreatedAssetCollection
+//            }, completionHandler: { success, error in
+//                self.albumFound = success
+//                
+//                if (success) {
+//                    let collectionFetchResult = PHAssetCollection.fetchAssetCollectionsWithLocalIdentifiers([self.assetCollectionPlaceholder.localIdentifier], options: nil)
+//                    print(collectionFetchResult)
+//                    self.assetCollection = collectionFetchResult.firstObject as! PHAssetCollection
+//                }
+//            })
+//        }
         
         
         
@@ -197,6 +211,10 @@ class MainController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func pickPhotoAction(_ sender: Any) {
         getImageFromSource(isCameraImage: false)
+    }
+    
+    @IBAction func returnAction(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
 }
 
